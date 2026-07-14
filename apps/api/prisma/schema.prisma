@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  free
+  premium
+}
+
+enum MediaKind {
+  movie
+  tv
+  anime
+  manga
+  documentary
+  telenovela
+  music
+  sport
+  live_tv
+  radio
+}
+
+enum WatchlistStatus {
+  planned
+  in_progress
+  completed
+  dropped
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  avatarUrl    String?
+  plan         Plan     @default(free)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  watchlist WatchlistEntry[]
+  reviews   Review[]
+  lists     CuratedList[]
+}
+
+model WatchlistEntry {
+  id           String          @id @default(cuid())
+  userId       String
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaId      String
+  mediaKind    MediaKind
+  title        String
+  posterUrl    String?
+  status       WatchlistStatus @default(planned)
+  progressNote String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@unique([userId, mediaId])
+  @@index([userId])
+}
+
+model Review {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mediaId   String
+  mediaKind MediaKind
+  rating    Int
+  body      String?
+  createdAt DateTime  @default(now())
+
+  @@index([mediaId])
+  @@index([userId])
+}
+
+model CuratedList {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  isPublic    Boolean  @default(true)
+  items       Json     @default("[]")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
