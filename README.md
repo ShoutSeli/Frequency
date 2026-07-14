@@ -97,12 +97,7 @@ docker-compose.yml   Local Postgres + Redis for development
 | Time Capsule | TMDB + TheSportsDB | Pick a date, see what released/played that day |
 | Watchlist / Reviews / Lists | Your own Postgres DB | Fully original user-generated data — no copyright concerns |
 
-## Monetization hooks already wired for you
-- `Pricing` page + `plan` field on `User` — plug in Stripe Checkout (`STRIPE_*` env vars are stubbed in `.env.example`)
-- Watch-provider deep links are structured so you can add affiliate query params per provider
-- Ad slots can be dropped into `Rail` or page layouts without restructuring
 
 ## What's intentionally *not* included
-This app deliberately does **not** host, upload, or stream copyrighted movies, TV, music, or manga files — that
-would be piracy and both illegal and a fast way to get the whole project shut down. Every "watch" or "listen"
+This app deliberately does **not** host, upload, or stream copyrighted movies, TV, music, or manga files. Every "watch" or "listen"
 action deep-links to a licensed third party.
