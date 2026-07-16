@@ -1,8 +1,12 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/auth-store';
 
+// In local dev, Vite's dev-server proxy forwards "/api" to localhost:4000 (see vite.config.ts).
+// In production, there's no such proxy, so we point straight at the deployed API URL instead.
+const baseURL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : '/api';
+
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL,
 });
 
 api.interceptors.request.use((config) => {
